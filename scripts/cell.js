@@ -20,9 +20,14 @@ class Cell {
         delete cellsObj[this.y][this.x];
     }
     render() {
-        if((this.x + 1) * UNIT < camera.x || (this.y + 1) * UNIT < camera.y || this.x * UNIT > camera.x + canvas.clientWidth || this.y * UNIT > camera.y + canvas.clientHeight) return; // Check if the cell is visible
+        //if((this.x + 1) * UNIT < camera.x || (this.y + 1) * UNIT < camera.y || this.x * UNIT > camera.x + canvas.clientWidth || this.y * UNIT > camera.y + canvas.clientHeight) return; // Check if the cell is visible
+        //^^ Faster to actually graw the out-camera tiles than checking this
         ctx.fillStyle = this.color;
-        ctx.fillRect(this.x * UNIT - camera.x, this.y * UNIT - camera.y, UNIT, UNIT); //Todo optimalize, don't draw if out of view
+        ctx.fillRect(this.x * UNIT - camera.x, this.y * UNIT - camera.y, UNIT, UNIT);
+        /*ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.roundRect(this.x * UNIT - camera.x, this.y * UNIT - camera.y, UNIT, UNIT, UNIT / 5);
+        ctx.fill(); <- Not drawing rounded corners for performance reasons*/
         if(this.isSelected) {
             ctx.strokeStyle = "red";
             ctx.lineWidth = 5;
@@ -36,7 +41,7 @@ class Cell {
             for(let i2 = 0; i2 < this.ruleset.checkedLocations[i].length; i2++) {
                 if(i == 2 && i2 == 2) continue;
                 if(this.ruleset.checkedLocations[i][i2]) {
-                    if(cellsObj[this.y + i - 2]?.[this.x + i2 - 2]) {
+                    if(cellsObj[this.y + i - 2]?.[this.x + i2 - 2]) { // This line is insanely slow for some reason
                         count++
                     }
                 }

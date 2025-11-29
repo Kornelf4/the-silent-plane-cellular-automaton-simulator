@@ -118,3 +118,12 @@ input[type="button"]:hover {
     text-decoration: double;
     position: absolute;
 }
+.wrapper {
+    position: relative;
+}
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    image-rendering: pixelated;
+}

@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="wrapper">
+        <canvas id="canvas2"></canvas>
+        <canvas id="canvas"></canvas>
+    </div>
     <div id="fpsText">FPS: 0</div>
     <div id="settingsBox">
         <div id="settingsBoxHeader">General settings:</div>
@@ -18,6 +22,7 @@
         <input type="button" value="Plot randomly" id="randomPlot">
         Turns/sec: <input type="text" id="simSpeed" value="10"><br>
         Mutation%: <input type="text" id="mutRate" value="0"><br>
+        Show snowflakes: <input type="checkbox" name="" id="sc" checked>
         <a href="https://github.com/Kornelf4/evo_conways_game_of_life">Github</a><br>
         <a href="https://kornelf.itch.io/conways-game-of-life-evolution">Itch.io</a><br>
         <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">CGoL wiki</a>
@@ -36,18 +41,19 @@
         <div id="helpBoxHeader">Controls:</div>
         <div class="modeHelp">Click anywhere to toggle a cell. </div><br>
         <div class="modeHelp">Use WASD keys to move the camera.</div> <br>
-        <div class="modeHelp"></div>Use the wheel or the buttons to zoom in or out. <br>
+        <div class="modeHelp"> the wheel or the buttons to zoom in or out. </div>Use<br>
         <div class="modeHelp"> Press c and click a cell to select and modify it. <br></div>
         <div class="modeHelp">Click on it once again (while pressing c) to deselect it, and go to default mode. </div> <br>
         <div class="modeHelp">If you press c and click a dead cell, you can view (and modify) the dead cell settings.</div> <br>
         <div class="modeHelp">You can also go to dead cell settings if you press h.</div> <br>
         <div class="modeHelp"> You can go to default mode if you deselect a cell, or press n.</div>
     </div>
-    <canvas id="canvas"></canvas>
 </body>
 </html>
 <script src="scripts/ruleset.js"></script>
 <script src="scripts/dragSettings.js"></script>
+<script src="scripts/snowflakeGen.js"></script>
+<script src="scripts/snowflake.js"></script>
 <script src="scripts/main.js"></script>
 <script src="scripts/input.js"></script>
 <script src="scripts/mutations.js"></script>

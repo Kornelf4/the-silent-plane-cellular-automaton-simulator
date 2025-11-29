@@ -78,7 +78,7 @@ document.getElementById("clearButton").onclick = function() {
     this.blur();
 }
 document.getElementById("randomPlot").onclick = function() {
-    if(Object.keys(cellsObj).length != 0) {
+    /*if(Object.keys(cellsObj).length != 0) {
         if(confirm("The word should be empty. Do you want to clear the living cells, and then plot randomly?")) {
             cellsObj = {};
             selectedCell = null;
@@ -86,11 +86,16 @@ document.getElementById("randomPlot").onclick = function() {
         } else {
             return;
         }
+    }*/
+    let squareStats = prompt("Position and size of square? (x, y, height, width)")?.split(",");
+    if(!squareStats) return;
+    if(squareStats.length != 4) {
+        alert("Could not complete operation, because one or more arguments aren't provided.")
     }
-    let squareSize = prompt("Size of square?");
+    let [sqX, sqY, sqWidth, sqHeight] = squareStats.map(elem => parseInt(elem));
     let plotChance = prompt("Chance for living cell on every UNIT? (From 0 to 1)");
-    for(let i = 0;i < squareSize; i++) {
-        for(let i2 = 0; i2 < squareSize; i2++) {
+    for(let i = sqY; i < sqHeight + sqY; i++) {
+        for(let i2 = sqX; i2 < sqWidth + sqX; i2++) {
             if(Math.random() < plotChance) {
                 if(!cellsObj[i]) cellsObj[i] = {};
                 cellsObj[i][i2] = new Cell(i2, i, JSON.parse(JSON.stringify(defaultRuleset)))
@@ -105,5 +110,16 @@ canvas.onwheel = function(e) {
         document.getElementById("zoomInButton").click();
     } else {
         document.getElementById("zoomOutButton").click();
+    }
+}
+document.getElementById("sc").onchange = function() {
+    if(this.checked) {
+        snowFlakeIntervalId = setInterval(function() {
+            if(getRandomIntegerInclusive(0, 5) == 0) {
+                snowflakes.push(new Snowflake());
+            }
+        }, 1000 / 60);
+    } else {
+        clearInterval(snowFlakeIntervalId);
     }
 }

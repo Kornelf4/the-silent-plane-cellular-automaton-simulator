@@ -1,4 +1,4 @@
-var cellArray = [];
+var cellsObj = {};
 var pressedKeys = {};
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
@@ -7,7 +7,7 @@ var camera = { x: 0, y: 0 };
 var cameraSpeed = 5;
 var cameraMoveFPS = 60;
 var updateSpeedFPS = 10;
-var reqDeadCells = [];
+var reqDeadCells = {};
 var willBeRemoved = [];
 var willBeAdded = [];
 var isPaused = true;
@@ -17,8 +17,29 @@ var colorMap = {};
 var grid = false;
 var selectedCell = false;
 var selectedRuleset = defaultRuleset;
+var fpsDiv = document.getElementById("fpsText");
+var lastCalledTime;
+var fps;
 colorMap[JSON.stringify(defaultRuleset)] = "rgba(2, 91, 8, 1)";
 
+canvas.setAttribute("width", document.getElementsByTagName("body")[0].clientWidth);
+    canvas.setAttribute("height", document.getElementsByTagName("body")[0].clientHeight);
+function addCell(x, y, cell) {
+    if(!cellsObj[y]) {
+        cellsObj[y] = {};
+    }
+    cellsObj[y][x] = cell;
+}
+function calcFPS() {
+    if(!lastCalledTime) {
+     lastCalledTime = Date.now();
+     fps = 0;
+     return;
+  }
+  delta = (Date.now() - lastCalledTime)/1000;
+  lastCalledTime = Date.now();
+  fps = 1/delta;
+}
 function start() {
     initLocBoxes();
     updateDisplay();
@@ -34,7 +55,7 @@ function start() {
             }
             selectedRuleset.checkedLocations[thisY][thisX] = !selectedRuleset.checkedLocations[thisY][thisX];
             updateDisplay();
-            if(selectedCell) selectedCell.updateColor();
+            if (selectedCell) selectedCell.updateColor();
         })
     }
 }
@@ -49,50 +70,49 @@ function initLocBoxes() {
         }
     }
 }
-function renderCells() {
+addEventListener("resize", (event) => {
     canvas.setAttribute("width", document.getElementsByTagName("body")[0].clientWidth);
     canvas.setAttribute("height", document.getElementsByTagName("body")[0].clientHeight);
+})
+function renderCells() {
     ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
-    for (let i = 0; i < cellArray.length; i++) {
-        cellArray[i].render();
+    for(let i in cellsObj) {
+        for(let i2 in cellsObj[i]) {
+            cellsObj[i][i2].render(i2, i);
+        }
     }
 }
 function updateCells() {
-    //ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
-    for (let i = 0; i < cellArray.length; i++) {
-        cellArray[i].update();
+    for(let i in cellsObj) {
+        for(let i2 in cellsObj[i]) {
+            cellsObj[i][i2].update(i2, i);
+        }
     }
-}
-function getCellAt(x, y) {
-    for (let i = 0; i < cellArray.length; i++) {
-        if (cellArray[i].x == x && cellArray[i].y == y) return cellArray[i];
-    }
-    return false;
 }
 function toggleCellAt(x, y, ruleSet) {
-    let target = getCellAt(x, y)
-    if (target) {
-        target.remove();
+   let target = cellsObj[y]?.[x];
+    if(target) {
+        delete cellsObj[y][x];
     } else {
-        cellArray.push(new Cell(x, y, ruleSet));
+        addCell(x, y, new Cell(x, y, ruleSet));
     }
 }
 function selectCellAt(x, y) {
-    if(getCellAt(x, y)) {
-        if (selectedCell == getCellAt(x, y)) {
+    if (cellsObj[y]?.[x]) {
+        if (selectedCell == cellsObj[y][x]) {
             selectedCell.isSelected = false;
             selectedCell = null;
             selectedRuleset = defaultRuleset;
             document.getElementById("modSelect").innerText = "default";
         } else {
-            if(selectedCell) selectedCell.isSelected = false;
-            selectedCell = getCellAt(x, y);
+            if (selectedCell) selectedCell.isSelected = false;
+            selectedCell = cellsObj[y][x];
             selectedCell.isSelected = true;
             selectedRuleset = selectedCell.ruleset;
             document.getElementById("modSelect").innerText = "selected";
         }
     } else {
-        if(selectedCell) selectedCell.isSelected = false;
+        if (selectedCell) selectedCell.isSelected = false;
         selectedCell = null;
         selectedRuleset = defaultDead;
         document.getElementById("modSelect").innerText = "dead";
@@ -100,54 +120,68 @@ function selectCellAt(x, y) {
     updateDisplay();
 }
 function updateDeadCells() {
-    for (let i = 0; i < reqDeadCells.length; i++) {
-        let actDeadCell = JSON.parse(reqDeadCells[i]);
-        let counter = 0;
-        let possibleParentRulesets = [];
-        for (let i = 0; i < defaultDead.checkedLocations.length; i++) {
-            for (let i2 = 0; i2 < defaultDead.checkedLocations[i].length; i2++) {
-                if (i == 2 && i2 == 2) continue;
-                let target = getCellAt(actDeadCell.x + i2 - 2, actDeadCell.y + i - 2);
-                if (defaultDead.checkedLocations[i][i2] && target) {
-                    //Count living cells
-                    counter++;
-                    //Cache parent rulesets
-                    possibleParentRulesets.push(target.ruleset);
+    for(let y in reqDeadCells) {
+        for(let x in reqDeadCells[y]) {
+            let counter = 0;
+            let possibleParentRulesets = [];
+            for (let i = 0; i < defaultDead.checkedLocations.length; i++) {
+                for (let i2 = 0; i2 < defaultDead.checkedLocations[i].length; i2++) {
+
+                    if (i == 2 && i2 == 2) continue;
+                    
+                    if (defaultDead.checkedLocations[i][i2]) {
+                        let target = cellsObj[parseInt(y) + i - 2]?.[parseInt(x) + i2 - 2];
+                        if(target) {
+                            //Count living cells
+                            counter++;
+                            //Cache parent rulesets
+                            possibleParentRulesets.push(target.ruleset);
+                        }
+                    }
                 }
             }
+            //Select random ruleset
+            let randRuleset = possibleParentRulesets[getRndInteger(0, possibleParentRulesets.length - 1)];
+            if (defaultDead.conditionList[counter]) {
+                willBeAdded.push(new Cell(parseInt(x), parseInt(y), mutRuleset(randRuleset)))
+            }
         }
-        //Select random ruleset
-        let randRuleset = possibleParentRulesets[getRndInteger(0, possibleParentRulesets.length - 1)];
-        if (defaultDead.conditionList[counter]) willBeAdded.push(new Cell(actDeadCell.x, actDeadCell.y, mutRuleset(randRuleset)));
     }
 }
 function updateState() {
-    reqDeadCells = [];
+    reqDeadCells = {};
     willBeRemoved = [];
     willBeAdded = [];
     updateCells();
     updateDeadCells();
+    for (let i = 0; i < willBeAdded.length; i++) {
+        addCell(willBeAdded[i].x, willBeAdded[i].y, new Cell(willBeAdded[i].x, willBeAdded[i].y, willBeAdded[i].ruleset))
+    }
     for (let i = 0; i < willBeRemoved.length; i++) {
         willBeRemoved[i].remove();
     }
-    for (let i = 0; i < willBeAdded.length; i++) {
-        cellArray.push(willBeAdded[i]);
-    }
     renderCells();
+    calcFPS();
+    fpsDiv.innerText = "FPS: " + Math.floor(fps);
 }
 function updateGameSpeed(to) {
     updateSpeedFPS = to;
     clearInterval(intervalID);
     intervalID = window.setInterval(() => {
-        if (!isPaused) updateState();
-        renderCells();
+        if (!isPaused) {
+            updateState();
+        } else {
+            renderCells();
+        }
     }, 1000 / updateSpeedFPS);
 }
 window.setInterval(() => {
-    //Update the camera on every gen? Abolutely.
     moveCamera();
 }, 1000 / cameraMoveFPS);
 intervalID = window.setInterval(() => {
-    if (!isPaused) updateState();
-    renderCells();
+    if (!isPaused) {
+            updateState();
+        } else {
+            renderCells();
+        }
 }, 1000 / updateSpeedFPS);

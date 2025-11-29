@@ -70,14 +70,14 @@ document.getElementById("zoomOutButton").onclick = () => {
     UNIT -= 5;
 }
 document.getElementById("clearButton").onclick = () => {
-    cellArray = [];
+    cellsObj = {};
     selectedCell = null;
     selectedRuleset = defaultRuleset;
 }
 document.getElementById("randomPlot").onclick = () => {
-    if(cellArray.length != 0) {
+    if(Object.keys(cellsObj).length != 0) {
         if(confirm("The word should be empty. Do you want to clear the living cells, and then plot randomly?")) {
-            cellArray = [];
+            cellsObj = {};
             selectedCell = null;
             selectedRuleset = defaultRuleset;
         } else {
@@ -89,7 +89,8 @@ document.getElementById("randomPlot").onclick = () => {
     for(let i = 0;i < squareSize; i++) {
         for(let i2 = 0; i2 < squareSize; i2++) {
             if(Math.random() < plotChance) {
-                cellArray.push(new Cell(i2, i, JSON.parse(JSON.stringify(defaultRuleset))));
+                if(!cellsObj[i]) cellsObj[i] = {};
+                cellsObj[i][i2] = new Cell(i2, i, JSON.parse(JSON.stringify(defaultRuleset)))
             }
         }
     }

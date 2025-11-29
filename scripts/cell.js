@@ -16,7 +16,7 @@ class Cell {
             selectedCell = null;
             selectedRuleset = defaultRuleset;
         }
-        cellArray.splice(cellArray.indexOf(this), 1);
+        delete cellsObj[this.y][this.x];
     }
     render() {
         ctx.fillStyle = this.color;
@@ -33,7 +33,11 @@ class Cell {
         for(let i = 0; i < this.ruleset.checkedLocations.length; i++) {
             for(let i2 = 0; i2 < this.ruleset.checkedLocations[i].length; i2++) {
                 if(i == 2 && i2 == 2) continue;
-                if(this.ruleset.checkedLocations[i][i2] && getCellAt(this.x + i2 - 2, this.y + i - 2)) count++;
+                if(this.ruleset.checkedLocations[i][i2]) {
+                    if(cellsObj[this.y + i - 2]?.[this.x + i2 - 2]) { //performance reasons
+                        count++
+                    }
+                }
             }
         }
         if(!this.ruleset.conditionList[count]) {
@@ -43,14 +47,13 @@ class Cell {
         for(let i = 0; i < defaultDead.checkedLocations.length; i++) {
             for(let i2 = 0; i2 < defaultDead.checkedLocations[i].length; i2++) {
                 if(i == 2 && i2 == 2) continue;
-                /*let target = getCellAt(this.x + i2 - 2, this.y + i - 2);
-                if(defaultDead.checkedLocations[i][i2] && !target && !reqDeadCells.includes(JSON.stringify({x: this.x + i2 - 2, y: this.y + i - 2}))) {
-                    reqDeadCells.push(JSON.stringify({x: this.x + i2 - 2, y: this.y + i - 2}));
-                }*/
                if(defaultDead.checkedLocations[i][i2]) {
-                    let target = getCellAt(this.x - i2 + 2, this.y - i  + 2);
-                    if(!target && !reqDeadCells.includes(JSON.stringify({x: this.x - i2 + 2, y: this.y - i  + 2}))) {
-                        reqDeadCells.push(JSON.stringify({x: this.x - i2 + 2, y: this.y - i  + 2}));
+                    if(!reqDeadCells[this.y - i  + 2]?.[this.x - i2 + 2]) {
+                        let target = cellsObj[this.y - i  + 2]?.[this.x - i2 + 2];
+                        if(!target) {
+                            if(!reqDeadCells[this.y - i  + 2]) reqDeadCells[this.y - i  + 2] = {};
+                            reqDeadCells[this.y - i  + 2][this.x - i2 + 2] = true;
+                        }
                     }
                }
             }

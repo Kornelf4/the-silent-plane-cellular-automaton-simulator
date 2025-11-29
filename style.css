@@ -112,3 +112,9 @@ input[type="button"]:hover {
 .modeHelp {
     border: 3px solid yellow;
 }
+#fpsText {
+    margin: 2%;
+    color: green;
+    text-decoration: double;
+    position: absolute;
+}

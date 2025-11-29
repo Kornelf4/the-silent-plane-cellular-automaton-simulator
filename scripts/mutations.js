@@ -15,18 +15,24 @@ function mutRuleset(ruleset) {
     if(getRndInteger(0, 99) < mutationRate) {
         //Mutate the checked area
         let result = JSON.parse(JSON.stringify(ruleset));
-        if(getRndInteger(0, 1) == 0) {
-            let targetLoc = getRandLoc();
-            if(result.checkedLocations[targetLoc.y][targetLoc.x]) {
-                result.conditionList.pop();
-            } else {
-                result.conditionList.push(false); //Consider making this random
-            }
-            result.checkedLocations[targetLoc.y][targetLoc.x] = !result.checkedLocations[targetLoc.y][targetLoc.x];
-        } else {
-            //Mutate the livung conditions
-            let targetIndex = getRndInteger(0, result.conditionList.length - 1);
-            result.conditionList[targetIndex] = !result.conditionList[targetIndex];
+        switch(getRndInteger(0, 1)) {
+            case 0:
+                let targetLoc = getRandLoc();
+                if(result.checkedLocations[targetLoc.y][targetLoc.x]) {
+                    result.conditionList.pop();
+                } else {
+                    result.conditionList.push(false); //Consider making this random
+                }
+                result.checkedLocations[targetLoc.y][targetLoc.x] = !result.checkedLocations[targetLoc.y][targetLoc.x];
+            case 1:
+                let targetIndex = getRndInteger(0, result.conditionList.length - 1);
+                result.conditionList[targetIndex] = !result.conditionList[targetIndex];
+            case 2:
+                for(let i = 0; i < 2; i++) {
+                    let target1 = getRndInteger(0, result.conditionList.length - 1);
+                    let target2 = getRndInteger(0, result.conditionList.length - 1);
+                    [result.conditionList[target1], result.conditionList[target2]] = [result.conditionList[target2], result.conditionList[target1]];
+                }
         }
         colorMap[JSON.stringify(result)] = randomRgb();
         return result;

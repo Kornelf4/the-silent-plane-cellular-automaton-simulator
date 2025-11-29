@@ -12,7 +12,7 @@ document.getElementById("pasteData").addEventListener("click", async () => {
         alert("Failed to paste from clipboard. (It might not work on itch.io)")
     }
 });
-async function setClipboard(text) { //Copied from mbn docs
+async function setClipboard(text) {
   const type = "text/plain";
   const clipboardItemData = {
     [type]: text,

@@ -1,21 +1,27 @@
 window.addEventListener("keydown", (e) => {
     pressedKeys[e.key.toLowerCase()] = true;
     if(e.key.toLowerCase() == "h") {
-        if(selectedCell)selectedCell.isSelected = false;
-        selectedCell = null;
         selectedRuleset = defaultDead;
         document.getElementById("modSelect").innerText = "dead";
-        updateDisplay();
     }
     if(e.key.toLowerCase() == "n") {
-        if(selectedCell)selectedCell.isSelected = false;
-        selectedCell = null;
         selectedRuleset = defaultRuleset;
         document.getElementById("modSelect").innerText = "default";
+    }
+    if(e.key.toLowerCase() == "h" || e.key.toLowerCase() == "n") {
+        if(selectedCell)selectedCell.isSelected = false;
+        selectedCell = null;
         updateDisplay();
     }
+    if(e.key.toLowerCase() == " " &&spaceWasReleased) {
+        spaceWasReleased = false;
+        togglePause();
+    }
 });
-window.addEventListener("keyup", (e) => delete pressedKeys[e.key.toLowerCase()]);
+window.addEventListener("keyup", (e) => {
+    if(e.key == " ") spaceWasReleased = true;
+    delete pressedKeys[e.key.toLowerCase()]
+});
 canvas.addEventListener('click', function(event) {
     const rect = this.getBoundingClientRect();
     const x = event.clientX - rect.left;
@@ -39,34 +45,26 @@ document.getElementById("mutRate").addEventListener("keydown", function(e)  {
     }
 })
 document.getElementById("pauseButton").onclick = function() {
-    isPaused = !isPaused;
-    if(isPaused) {
-        this.value = "Start";
-    } else {
-        this.value = "Pause";
-    }
+    togglePause();
 }
 document.getElementById("stepButton").onclick = updateState;
-document.getElementById("zoomInButton").onclick = () => {
-    //TODO: This is kinda stupid
+function unitZoom(zoomingFactor) {
     let cameraCenterX = camera.x + canvas.clientWidth / 2;
     let cameraCenterY = camera.y + canvas.clientHeight / 2;
-    let zoomingFactor = (UNIT + 5) / UNIT;
     cameraCenterX *= zoomingFactor;
     cameraCenterY *= zoomingFactor;
     camera.x = cameraCenterX - canvas.clientWidth / 2;
     camera.y = cameraCenterY - canvas.clientHeight / 2;
+}
+document.getElementById("zoomInButton").onclick = () => {
+    let zoomingFactor = (UNIT + 5) / UNIT;
+    unitZoom(zoomingFactor);
     UNIT += 5;
 }
 document.getElementById("zoomOutButton").onclick = () => {
     if (UNIT - 5 <= 0) return;
-    let cameraCenterX = camera.x + canvas.clientWidth / 2;
-    let cameraCenterY = camera.y + canvas.clientHeight / 2;
     let zoomingFactor = (UNIT - 5) / UNIT;
-    cameraCenterX *= zoomingFactor;
-    cameraCenterY *= zoomingFactor;
-    camera.x = cameraCenterX - canvas.clientWidth / 2;
-    camera.y = cameraCenterY - canvas.clientHeight / 2;
+    unitZoom(zoomingFactor);
     UNIT -= 5;
 }
 document.getElementById("clearButton").onclick = () => {
@@ -97,9 +95,8 @@ document.getElementById("randomPlot").onclick = () => {
 }
 canvas.onwheel = function(e) {
     e.preventDefault();
-    console.log(e.deltaY);
     if(e.deltaY < 0) {
-        document.getElementById("zoomInButton").click(); //And I regret nothing
+        document.getElementById("zoomInButton").click();
     } else {
         document.getElementById("zoomOutButton").click();
     }

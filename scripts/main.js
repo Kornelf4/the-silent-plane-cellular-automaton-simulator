@@ -18,12 +18,13 @@ var grid = false;
 var selectedCell = false;
 var selectedRuleset = defaultRuleset;
 var fpsDiv = document.getElementById("fpsText");
+var spaceWasReleased = true;
 var lastCalledTime;
 var fps;
 colorMap[JSON.stringify(defaultRuleset)] = "rgba(2, 91, 8, 1)";
 
 canvas.setAttribute("width", document.getElementsByTagName("body")[0].clientWidth);
-    canvas.setAttribute("height", document.getElementsByTagName("body")[0].clientHeight);
+canvas.setAttribute("height", document.getElementsByTagName("body")[0].clientHeight);
 function addCell(x, y, cell) {
     if(!cellsObj[y]) {
         cellsObj[y] = {};
@@ -40,14 +41,23 @@ function calcFPS() {
   lastCalledTime = Date.now();
   fps = 1/delta;
 }
+function togglePause() {
+    isPaused = !isPaused;
+    if(isPaused) {
+        document.getElementById("pauseButton").value = "Start";
+    } else {
+        document.getElementById("pauseButton").value = "Pause";
+    }
+}
 function start() {
     initLocBoxes();
     updateDisplay();
     let boxElems = document.getElementsByClassName("locBox");
     for (let i = 0; i < boxElems.length; i++) {
         boxElems[i].addEventListener("click", function () {
-            let thisX = this.id.slice(1).split("_")[0];
-            let thisY = this.id.slice(1).split("_")[1];
+            let splicedId = this.id.slice(1).split("_");
+            let thisX = splicedId[0];
+            let thisY = splicedId[1];
             if (selectedRuleset.checkedLocations[thisY][thisX]) {
                 selectedRuleset.conditionList.pop();
             } else {
@@ -126,21 +136,16 @@ function updateDeadCells() {
             let possibleParentRulesets = [];
             for (let i = 0; i < defaultDead.checkedLocations.length; i++) {
                 for (let i2 = 0; i2 < defaultDead.checkedLocations[i].length; i2++) {
-
                     if (i == 2 && i2 == 2) continue;
-                    
                     if (defaultDead.checkedLocations[i][i2]) {
                         let target = cellsObj[parseInt(y) + i - 2]?.[parseInt(x) + i2 - 2];
                         if(target) {
-                            //Count living cells
                             counter++;
-                            //Cache parent rulesets
                             possibleParentRulesets.push(target.ruleset);
                         }
                     }
                 }
             }
-            //Select random ruleset
             let randRuleset = possibleParentRulesets[getRndInteger(0, possibleParentRulesets.length - 1)];
             if (defaultDead.conditionList[counter]) {
                 willBeAdded.push(new Cell(parseInt(x), parseInt(y), mutRuleset(randRuleset)))
@@ -164,9 +169,7 @@ function updateState() {
     calcFPS();
     fpsDiv.innerText = "FPS: " + Math.floor(fps);
 }
-function updateGameSpeed(to) {
-    updateSpeedFPS = to;
-    clearInterval(intervalID);
+function newInterval() {
     intervalID = window.setInterval(() => {
         if (!isPaused) {
             updateState();
@@ -175,13 +178,12 @@ function updateGameSpeed(to) {
         }
     }, 1000 / updateSpeedFPS);
 }
+function updateGameSpeed(to) {
+    updateSpeedFPS = to;
+    clearInterval(intervalID);
+    newInterval()
+}
 window.setInterval(() => {
     moveCamera();
 }, 1000 / cameraMoveFPS);
-intervalID = window.setInterval(() => {
-    if (!isPaused) {
-            updateState();
-        } else {
-            renderCells();
-        }
-}, 1000 / updateSpeedFPS);
+newInterval();

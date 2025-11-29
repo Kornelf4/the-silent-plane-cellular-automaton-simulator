@@ -1,3 +1,4 @@
+// Rulesets of Conway's Game of Life
 var defaultRuleset = {
     checkedLocations: [
         [false, false, false, false, false],

@@ -8,12 +8,12 @@ window.addEventListener("keydown", (e) => {
         selectedRuleset = defaultRuleset;
         document.getElementById("modSelect").innerText = "default";
     }
-    if(e.key.toLowerCase() == "h" || e.key.toLowerCase() == "n") {
+    if(e.key.toLowerCase() == "h" || e.key.toLowerCase() == "n") { // Very readable...
         if(selectedCell)selectedCell.isSelected = false;
         selectedCell = null;
         updateDisplay();
     }
-    if(e.key.toLowerCase() == " " &&spaceWasReleased) {
+    if(e.key.toLowerCase() == " " && spaceWasReleased) {
         spaceWasReleased = false;
         togglePause();
     }
@@ -46,9 +46,13 @@ document.getElementById("mutRate").addEventListener("keydown", function(e)  {
 })
 document.getElementById("pauseButton").onclick = function() {
     togglePause();
+    this.blur();
 }
-document.getElementById("stepButton").onclick = updateState;
-function unitZoom(zoomingFactor) {
+document.getElementById("stepButton").onclick = function() {
+    updateState();
+    this.blur();
+}
+function unitZoom(zoomingFactor) { //idk, from stackoverflow
     let cameraCenterX = camera.x + canvas.clientWidth / 2;
     let cameraCenterY = camera.y + canvas.clientHeight / 2;
     cameraCenterX *= zoomingFactor;
@@ -67,12 +71,13 @@ document.getElementById("zoomOutButton").onclick = () => {
     unitZoom(zoomingFactor);
     UNIT -= 5;
 }
-document.getElementById("clearButton").onclick = () => {
+document.getElementById("clearButton").onclick = function() {
     cellsObj = {};
     selectedCell = null;
     selectedRuleset = defaultRuleset;
+    this.blur();
 }
-document.getElementById("randomPlot").onclick = () => {
+document.getElementById("randomPlot").onclick = function() {
     if(Object.keys(cellsObj).length != 0) {
         if(confirm("The word should be empty. Do you want to clear the living cells, and then plot randomly?")) {
             cellsObj = {};
@@ -92,6 +97,7 @@ document.getElementById("randomPlot").onclick = () => {
             }
         }
     }
+    this.blur();
 }
 canvas.onwheel = function(e) {
     e.preventDefault();

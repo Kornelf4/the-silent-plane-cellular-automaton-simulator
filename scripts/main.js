@@ -1,4 +1,4 @@
-var cellsObj = {};
+var cellsObj = {}; // Object matrix go brr
 var pressedKeys = {};
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
@@ -87,7 +87,7 @@ addEventListener("resize", (event) => {
 function renderCells() {
     ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
     for(let i in cellsObj) {
-        for(let i2 in cellsObj[i]) {
+        for(let i2 in cellsObj[i]) { //Why the shit performance??
             cellsObj[i][i2].render(i2, i);
         }
     }
@@ -108,7 +108,7 @@ function toggleCellAt(x, y, ruleSet) {
     }
 }
 function selectCellAt(x, y) {
-    if (cellsObj[y]?.[x]) {
+    if (cellsObj[y]?.[x]) { //This cannot be automated ):
         if (selectedCell == cellsObj[y][x]) {
             selectedCell.isSelected = false;
             selectedCell = null;
@@ -132,13 +132,15 @@ function selectCellAt(x, y) {
 function updateDeadCells() {
     for(let y in reqDeadCells) {
         for(let x in reqDeadCells[y]) {
+            let parsedX = parseInt(x);
+            let parsedY = parseInt(y); // Ye this was hard to debug
             let counter = 0;
-            let possibleParentRulesets = [];
+            let possibleParentRulesets = []; // Why the long name
             for (let i = 0; i < defaultDead.checkedLocations.length; i++) {
                 for (let i2 = 0; i2 < defaultDead.checkedLocations[i].length; i2++) {
                     if (i == 2 && i2 == 2) continue;
                     if (defaultDead.checkedLocations[i][i2]) {
-                        let target = cellsObj[parseInt(y) + i - 2]?.[parseInt(x) + i2 - 2];
+                        let target = cellsObj[parsedY + i - 2]?.[parsedX + i2 - 2];
                         if(target) {
                             counter++;
                             possibleParentRulesets.push(target.ruleset);
@@ -148,7 +150,7 @@ function updateDeadCells() {
             }
             let randRuleset = possibleParentRulesets[getRndInteger(0, possibleParentRulesets.length - 1)];
             if (defaultDead.conditionList[counter]) {
-                willBeAdded.push(new Cell(parseInt(x), parseInt(y), mutRuleset(randRuleset)))
+                willBeAdded.push(new Cell(parsedX, parsedY, mutRuleset(randRuleset)))
             }
         }
     }
@@ -157,7 +159,7 @@ function updateState() {
     reqDeadCells = {};
     willBeRemoved = [];
     willBeAdded = [];
-    updateCells();
+    updateCells(); // This shouldn't be the most efficent sequence of operations but I'm too dumb
     updateDeadCells();
     for (let i = 0; i < willBeAdded.length; i++) {
         addCell(willBeAdded[i].x, willBeAdded[i].y, new Cell(willBeAdded[i].x, willBeAdded[i].y, willBeAdded[i].ruleset))
@@ -169,7 +171,7 @@ function updateState() {
     calcFPS();
     fpsDiv.innerText = "FPS: " + Math.floor(fps);
 }
-function newInterval() {
+function newInterval() { //Readable
     intervalID = window.setInterval(() => {
         if (!isPaused) {
             updateState();

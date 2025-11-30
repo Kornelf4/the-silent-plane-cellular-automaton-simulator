@@ -27,6 +27,6 @@ Two options:
 - Note: I'm not an expert in this, and I'm still learning. I don't really know the complex math behind this, and I know that my code has a lot of limitations. But I know that it looks good and it's fun. If you like it, give it a star, and if you have feedback or an issue, feel free the create an issue here or ping me on discord (I'm in the ConwayLife server).
 
 
-~~ Honestly, writing this was the hardest part. ~~
+~~Honestly, writing this was the hardest part.~~
 > [!NOTE]
 > Contributions, pull requests are also welcome.

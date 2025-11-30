@@ -4,7 +4,7 @@
 > [!NOTE]
 > If you don't know what is Conway's Game of Life: [Wikipedia](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
 
-Simple, minimalist JavaScript implementation of cellular automatons like Conway's Game of Life and other custom automatons. You can edit and view the cells' rulesets, you can even create your own! Interestingly, you can simulate _multiple different cellular_ automatons at once, and you can also enable _mutations_(basically, there is a chance that the child cell will have slightly changed version of the parent's ruleset) for a _chaotic but fun_ experience. It's winter themed - now it fits PROCJAM theme.
+Simple, minimalist JavaScript implementation of cellular automatons like Conway's Game of Life and other custom automatons. You can edit and view the cells' rulesets, you can even create your own! Interestingly, you can simulate _multiple different cellular_ automatons at once, and you can also enable _mutations_ (basically, there is a chance that the child cell will have slightly changed version of the parent's ruleset) for a _chaotic but fun_ experience. It's winter themed - now it fits PROCJAM theme.
 ## Controls
 You can find informations about controls in the game.
 ## How to try it

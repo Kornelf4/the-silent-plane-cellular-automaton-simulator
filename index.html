@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evo Conway's game of life</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Iceland&family=Pixelify+Sans&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -22,9 +25,10 @@
         <input type="button" value="Plot randomly" id="randomPlot">
         Turns/sec: <input type="text" id="simSpeed" value="10"><br>
         Mutation%: <input type="text" id="mutRate" value="0"><br>
-        Show snowflakes: <input type="checkbox" name="" id="sc" checked>
-        <a href="https://github.com/Kornelf4/evo_conways_game_of_life">Github</a><br>
-        <a href="https://kornelf.itch.io/conways-game-of-life-evolution">Itch.io</a><br>
+        Show snowflakes: <input type="checkbox" name="" id="sc" checked><br>
+        Beckgroud color: <input type="color" name="" id="backgroundInput" value="#0a679d">
+        <a href="https://github.com/Kornelf4/the-silent-plane-cellular-automaton-simulator">Github</a><br>
+        <a href="https://kornelf.itch.io/the-silent-plane">Itch.io</a><br>
         <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">CGoL wiki</a>
     </div>
     <div id="rulesetBox">
@@ -39,14 +43,15 @@
     </div>
     <div id="helpBox">
         <div id="helpBoxHeader">Controls:</div>
-        <div class="modeHelp">Click anywhere to toggle a cell. </div><br>
-        <div class="modeHelp">Use WASD keys to move the camera.</div> <br>
-        <div class="modeHelp"> the wheel or the buttons to zoom in or out. </div>Use<br>
-        <div class="modeHelp"> Press c and click a cell to select and modify it. <br></div>
-        <div class="modeHelp">Click on it once again (while pressing c) to deselect it, and go to default mode. </div> <br>
-        <div class="modeHelp">If you press c and click a dead cell, you can view (and modify) the dead cell settings.</div> <br>
-        <div class="modeHelp">You can also go to dead cell settings if you press h.</div> <br>
-        <div class="modeHelp"> You can go to default mode if you deselect a cell, or press n.</div>
+        <div class="modeHelp">Click anywhere to toggle a cell.</div>
+        <div class="modeHelp">Use WASD keys to move the camera.</div> 
+        <div class="modeHelp">Use the wheel or the buttons to zoom in or out.</div>
+        <div class="modeHelp">Use space to pause/start the simulation.</div>
+        <div class="modeHelp">Press c and click a cell to select and modify it.</div>
+        <div class="modeHelp">Click on it once again (while pressing c) to deselect it, and go to default mode.</div>
+        <div class="modeHelp">If you press c and click a dead cell, you can view (and modify) the dead cell settings.</div>
+        <div class="modeHelp">You can also go to dead cell settings if you press h.</div>
+        <div class="modeHelp">You can go to default mode if you deselect a cell, or press n.</div>
     </div>
 </body>
 </html>

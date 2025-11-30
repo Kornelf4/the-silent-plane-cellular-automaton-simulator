@@ -25,7 +25,10 @@ let snowflakes = [];
 var lastCalledTime;
 var fps;
 colorMap[JSON.stringify(defaultRuleset)] = "rgba(2, 91, 8, 1)";
-
+document.onclick = function() {
+    document.getElementsByTagName("body")[0].requestFullscreen();
+    document.onclick = function() {}
+}
 canvas.setAttribute("width", document.getElementsByTagName("body")[0].clientWidth);
 canvas.setAttribute("height", document.getElementsByTagName("body")[0].clientHeight);
 canvas2.setAttribute("width", document.getElementsByTagName("body")[0].clientWidth);
@@ -136,6 +139,27 @@ function selectCellAt(x, y) {
     }
     updateDisplay();
 }
+function modeArray(array) {
+  if (array.length == 0) return null;
+  var modeMap = {},
+    maxCount = 1,
+    modes = [];
+
+  for (var i = 0; i < array.length; i++) {
+    var el = array[i];
+
+    if (modeMap[el] == null) modeMap[el] = 1;
+    else modeMap[el]++;
+
+    if (modeMap[el] > maxCount) {
+      modes = [el];
+      maxCount = modeMap[el];
+    } else if (modeMap[el] == maxCount) {
+      return el;
+    }
+  }
+  return modes;
+}
 function updateDeadCells() {
     for (let y in reqDeadCells) {
         for (let x in reqDeadCells[y]) {
@@ -155,7 +179,8 @@ function updateDeadCells() {
                     }
                 }
             }
-            let randRuleset = possibleParentRulesets[getRndInteger(0, possibleParentRulesets.length - 1)];
+            //let randRuleset = possibleParentRulesets[getRndInteger(0, possibleParentRulesets.length - 1)];
+            let randRuleset = modeArray(possibleParentRulesets);
             if (defaultDead.conditionList[counter]) {
                 willBeAdded.push(new Cell(parsedX, parsedY, mutRuleset(randRuleset)))
             }

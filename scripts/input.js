@@ -123,3 +123,6 @@ document.getElementById("sc").onchange = function() {
         clearInterval(snowFlakeIntervalId);
     }
 }
+document.getElementById("backgroundInput").onchange = function() {
+    document.getElementsByClassName("wrapper")[0].style.backgroundColor = this.value;
+}

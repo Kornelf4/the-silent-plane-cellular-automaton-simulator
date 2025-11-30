@@ -4,7 +4,7 @@
 > [!NOTE]
 > If you don't know what is Conway's Game of Life: [Wikipedia](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
 
-Simple, minimalist JavaScript implementation of cellular automatons like Conway's Game of Life and other custom automatons. You can edit and view the cells' rulesets, you can even create your own! Interestingly, you can simulate multiple different cellular automatons at once, and you can also enable mutations (basically, there is a chance that the child cell will have slightly changed version of the parent's ruleset) for a chaotic but fun experience. It's winter themed - now it fits PROCJAM theme.
+Simple, minimalist JavaScript implementation of cellular automatons like Conway's Game of Life and other custom automatons. You can edit and view the cells' rulesets, you can even create your own! Interestingly, you can simulate _multiple different cellular_ automatons at once, and you can also enable _mutations_(basically, there is a chance that the child cell will have slightly changed version of the parent's ruleset) for a _chaotic but fun_ experience. It's winter themed - now it fits PROCJAM theme.
 ## Controls
 You can find informations about controls in the game.
 ## How to try it
@@ -14,11 +14,11 @@ Two options:
 > On itch.io the copy and paste feature might not work due to permission reasons.
 2. Download or clone this repository and open index.html in a browser.
 ## Bonus info
-- It's unique in this automation simulator genre, because it can simulate multiple different-behaving automatons at once.
+- It's unique in this automation simulator genre, because it can simulate _multiple different-behaving automatons_ at once.
 - The snowflakes in the background are procedurally generated in real time.
 - The cells with the same ruleset have the same color.
 - You can drag and move the windows.
-- The simulated world is infinite in theory.
+- The simulated world is _infinite_ in theory.
 - Three types of mutation exists:
 1. The checked area changes.
 2. The reaction to the different amount of living neighbors (cells in the checked area) changes.
@@ -29,4 +29,4 @@ Two options:
 
 ~~Honestly, writing this was the hardest part.~~
 > [!NOTE]
-> Contributions, pull requests are also welcome.
+> **Contributions, pull requests are also welcome.**

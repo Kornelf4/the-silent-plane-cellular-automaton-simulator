@@ -24,7 +24,9 @@ Two options:
 2. The reaction to the different amount of living neighbors (cells in the checked area) changes.
 3. Swap two live cell reaction indices.
 - This program was made in just a few days, without external libraries or AI.
-- Note: I'm not an expert in this, and I'm still learning. I don't really know the complex math behind this, and I know that my code has a lot of limitations. But I know that it looks good and it's fun. If you like it, give it a star, and if you have feedback or an issue, feel free the create an issue here or ping me on discord (I'm in the ConwayLife server).<br>
+- Note: I'm not an expert in this, and I'm still learning. I don't really know the complex math behind this, and I know that my code has a lot of limitations. But I know that it looks good and it's fun. If you like it, give it a star, and if you have feedback or an issue, feel free the create an issue here or ping me on discord (I'm in the ConwayLife server).
+
+
 ~~ Honestly, writing this was the hardest part. ~~
 > [!NOTE]
 > Contributions, pull requests are also welcome.

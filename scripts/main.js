@@ -139,30 +139,12 @@ function selectCellAt(x, y) {
     }
     updateDisplay();
 }
-function mostFrequent(arr) {
-    let m = new Map();
-    let maxCount = 0;
-    let res = null;
-
-    for (let num of arr) {
-        let count = (m.get(num) || 0) + 1;
-        m.set(num, count);
-
-        if (count > maxCount) {
-            maxCount = count;
-            res = num;
-        }
-    }
-
-    return res;
-}
 function updateDeadCells() {
     for (let y in reqDeadCells) {
         for (let x in reqDeadCells[y]) {
             let parsedX = parseInt(x);
             let parsedY = parseInt(y); // Ye this was hard to debug
             let counter = 0;
-            //let possibleParentRulesets = []; // Why the long name
             let parentCache = {};
             let bestOc = null;
             let bestNum = 0;
@@ -174,7 +156,6 @@ function updateDeadCells() {
                         if (target) {
                             counter++;
                             let actRs = target.rsString();
-                            //possibleParentRulesets.push(target.ruleset);
                             if(parentCache[actRs]) {
                                 parentCache[actRs]++;
                             } else {
@@ -188,15 +169,6 @@ function updateDeadCells() {
                     }
                 }
             }
-            /*console.log("a")
-            console.log(parentCache);
-            console.log(bestOc);*/
-            //let randRuleset = possibleParentRulesets[getRndInteger(0, possibleParentRulesets.length - 1)];
-            /*let randRuleset = mostFrequent(possibleParentRulesets);
-            console.log("Array:");
-            console.log(possibleParentRulesets);
-            console.log("Choosen:")
-            console.log(randRuleset)*/
             if (defaultDead.conditionList[counter]) {
                 willBeAdded.push(new Cell(parsedX, parsedY, mutRuleset(bestOc)))
             }
@@ -215,7 +187,6 @@ function updateState() {
     for (let i = 0; i < willBeRemoved.length; i++) {
         willBeRemoved[i].remove();
     }
-    //renderCells();
     calcFPS();
     fpsDiv.innerText = "FPS: " + Math.floor(fps);
 }
@@ -223,8 +194,6 @@ function newInterval() { //Readable
     intervalID = window.setInterval(() => {
         if (!isPaused) {
             updateState();
-        } else {
-            //renderCells();
         }
     }, 1000 / updateSpeedFPS);
 }

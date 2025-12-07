@@ -8,6 +8,9 @@ class Cell {
         this.ruleset = parentRuleset;
         this.isSelected = false;
     }
+    rsString() {
+        return this.ruleset.conditionList.map(elem => {if(elem) {return "1"} else {return "0"}}).join("") + "|" +this.ruleset.checkedLocations.flat().map(elem => {if(elem) {return "1"} else {return "0"}}).join("");
+    }
     updateColor() {
         if(colorMap[JSON.stringify(this.ruleset)] === undefined) colorMap[JSON.stringify(this.ruleset)] = randomRgb();
         this.color = colorMap[JSON.stringify(this.ruleset)];

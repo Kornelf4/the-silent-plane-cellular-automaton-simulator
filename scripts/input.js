@@ -78,22 +78,22 @@ document.getElementById("clearButton").onclick = function() {
     this.blur();
 }
 document.getElementById("randomPlot").onclick = function() {
-    /*if(Object.keys(cellsObj).length != 0) {
-        if(confirm("The word should be empty. Do you want to clear the living cells, and then plot randomly?")) {
-            cellsObj = {};
-            selectedCell = null;
-            selectedRuleset = defaultRuleset;
-        } else {
-            return;
-        }
-    }*/
     let squareStats = prompt("Position and size of square? (x, y, height, width)")?.split(",");
     if(!squareStats) return;
     if(squareStats.length != 4) {
         alert("Could not complete operation, because one or more arguments aren't provided.")
+        return;
     }
     let [sqX, sqY, sqWidth, sqHeight] = squareStats.map(elem => parseInt(elem));
-    let plotChance = prompt("Chance for living cell on every UNIT? (From 0 to 1)");
+    let plotChance = parseFloat(prompt("Chance for living cell on every UNIT? (From 0 to 1)"));
+    if(isNaN(plotChance)) {
+        alert("You have to enter a number from 0 to 1 as a chance.")
+        return;
+    }
+    if(plotChance < 0 || plotChance > 1) {
+        alert("You have to enter a number from 0 to 1 as a chance.")
+        return;
+    }
     for(let i = sqY; i < sqHeight + sqY; i++) {
         for(let i2 = sqX; i2 < sqWidth + sqX; i2++) {
             if(Math.random() < plotChance) {

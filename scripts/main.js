@@ -139,26 +139,22 @@ function selectCellAt(x, y) {
     }
     updateDisplay();
 }
-function modeArray(array) {
-  if (array.length == 0) return null;
-  var modeMap = {},
-    maxCount = 1,
-    modes = [];
+function mostFrequent(arr) {
+    let m = new Map();
+    let maxCount = 0;
+    let res = null;
 
-  for (var i = 0; i < array.length; i++) {
-    var el = array[i];
+    for (let num of arr) {
+        let count = (m.get(num) || 0) + 1;
+        m.set(num, count);
 
-    if (modeMap[el] == null) modeMap[el] = 1;
-    else modeMap[el]++;
-
-    if (modeMap[el] > maxCount) {
-      modes = [el];
-      maxCount = modeMap[el];
-    } else if (modeMap[el] == maxCount) {
-      return el;
+        if (count > maxCount) {
+            maxCount = count;
+            res = num;
+        }
     }
-  }
-  return modes;
+
+    return res;
 }
 function updateDeadCells() {
     for (let y in reqDeadCells) {
@@ -166,7 +162,10 @@ function updateDeadCells() {
             let parsedX = parseInt(x);
             let parsedY = parseInt(y); // Ye this was hard to debug
             let counter = 0;
-            let possibleParentRulesets = []; // Why the long name
+            //let possibleParentRulesets = []; // Why the long name
+            let parentCache = {};
+            let bestOc = null;
+            let bestNum = 0;
             for (let i = 0; i < defaultDead.checkedLocations.length; i++) {
                 for (let i2 = 0; i2 < defaultDead.checkedLocations[i].length; i2++) {
                     if (i == 2 && i2 == 2) continue;
@@ -174,15 +173,32 @@ function updateDeadCells() {
                         let target = cellsObj[parsedY + i - 2]?.[parsedX + i2 - 2];
                         if (target) {
                             counter++;
-                            possibleParentRulesets.push(target.ruleset);
+                            let actRs = target.rsString();
+                            //possibleParentRulesets.push(target.ruleset);
+                            if(parentCache[actRs]) {
+                                parentCache[actRs]++;
+                            } else {
+                                parentCache[actRs] = 1;
+                            }
+                            if(parentCache[actRs] >bestNum) {
+                                bestNum = parentCache[actRs];
+                                bestOc = target.ruleset;
+                            }
                         }
                     }
                 }
             }
+            /*console.log("a")
+            console.log(parentCache);
+            console.log(bestOc);*/
             //let randRuleset = possibleParentRulesets[getRndInteger(0, possibleParentRulesets.length - 1)];
-            let randRuleset = modeArray(possibleParentRulesets);
+            /*let randRuleset = mostFrequent(possibleParentRulesets);
+            console.log("Array:");
+            console.log(possibleParentRulesets);
+            console.log("Choosen:")
+            console.log(randRuleset)*/
             if (defaultDead.conditionList[counter]) {
-                willBeAdded.push(new Cell(parsedX, parsedY, mutRuleset(randRuleset)))
+                willBeAdded.push(new Cell(parsedX, parsedY, mutRuleset(bestOc)))
             }
         }
     }
